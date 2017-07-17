@@ -15,8 +15,9 @@
 #' @export
 
 mod.valid=function(a,b,c,d,e){
-	asdf=lm(b~as.matrix(a[e]))			    # model what you want
-	qwer=lm(b~as.matrix(a[1:max(e)]))		# full model in order to get Cp
+  df=data.frame(a[e],b); dff=data.frame(a[1:max(e)],b)
+  asdf=lm(b ~ ., data=df)				      # model what you want
+  qwer=lm(b ~ ., data=dff)	        	# full model in order to get Cp
 	mat=round(coef(summary(asdf))[,c(-3,-4)],4); mat2=matrix(0,5,2)
 	mat=rbind(mat,mat2); mat			      # matrix for coefficients and others(model-building)
 	n=nrow(anova(asdf)); m=nrow(anova(qwer))
@@ -37,8 +38,9 @@ mod.valid=function(a,b,c,d,e){
 	rownames(mat)[p+1]="p&Cp"; rownames(mat)[p+2]="Rp.sq&Rap.sq"
 	rownames(mat)[p+3]="SSE&PRESS"; rownames(mat)[p+4]="MSE&MSPR"; rownames(mat)[p+5]="AIC&BIC"
 
-	asdf2=lm(d~as.matrix(c[e]))
-	qwer2=lm(d~as.matrix(c[1:max(e)]))
+	df2=data.frame(c[e],d); dff2=data.frame(c[1:max(e)],d)
+	asdf2=lm(d ~ ., data=df2)
+	qwer2=lm(d ~ ., data=dff2)
 	matt=round(coef(summary(asdf2))[,c(-3,-4)],4); matt2=matrix(0,5,2)
 	matt=rbind(matt,matt2); matt		  	  # matrix for coefficients and others(validation)
 	n2=nrow(anova(asdf2)); m2=nrow(anova(qwer2))
